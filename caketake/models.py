@@ -134,7 +134,6 @@ class address(models.Model):
     customer = models.OneToOneField(
         customer, on_delete=models.CASCADE, related_name="addresss", primary_key=True
     )
-    shop = models.ForeignKey(shop, on_delete=models.CASCADE, related_name="addresss")
 
 
 class rating(models.Model):

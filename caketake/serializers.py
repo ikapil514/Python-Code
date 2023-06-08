@@ -32,15 +32,12 @@ class productserial(serializers.ModelSerializer):
 
 
 class shopserial(serializers.ModelSerializer):
-    addresss = serializers.CharField(read_only=True)
-
     class Meta:
         model = shop
         fields = [
             "id",
             "shop_name",
             "original_name",
-            "addresss",
             # "products",
         ]
 
