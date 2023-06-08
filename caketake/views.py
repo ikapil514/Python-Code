@@ -41,13 +41,19 @@ class shopViewSet(ModelViewSet):
 class addressViewSet(ModelViewSet):
     queryset = address.objects.all()
     serializer_class = addressserial
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAdminUser]
 
-
-class orderViewSet(ModelViewSet):
-    queryset = order.objects.all()
-    serializer_class = orderserial
-    permission_classes = [IsAuthenticated]
+    # @action(detail=False, methods=["GET", "PUT"], permission_classes=[IsAuthenticated])
+    # def me(self, request):
+    #     (query_set, create) = address.objects.get_or_create(customer_id=request.user.id)
+    #     if request.method == "GET":
+    #         serializer = addressserial(query_set)
+    #         return Response(serializer.data)
+    #     elif request.method == "PUT":
+    #         serializer = addressserial(query_set, data=request.data)
+    #         serializer.is_valid(raise_exception=True)
+    #         serializer.save()
+    #         return Response(serializer.data)
 
 
 class fpsViewSet(ModelViewSet):
@@ -72,3 +78,22 @@ class customerViewSet(ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)
+
+
+# from django.utils import timezone
+
+
+class orderViewSet(ModelViewSet):
+    queryset = order.objects.all()
+    serializer_class = orderserial
+    permission_classes = [IsAuthenticated]
+
+    # def get_queryset(self,*args,**kwargs):
+    #     start_time = self.request.GET.get("start_time",None)
+    #     end_time = self.request.GET.get("end_time",None)
+    #     if start_time and end_time :
+    #         # convert timestamps to timezone objects
+    #         start_time_instance = timezone.datetime.fromtimestamp(start_time)
+    #         end_time_instance = timezone.datetime.fromtimestamp(end_time)
+    #         return self.queryset.filter(start_time=start_time_instance,end_time_instance=end_time_instance)
+    #     return self.queryset

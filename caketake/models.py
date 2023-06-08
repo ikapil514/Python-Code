@@ -13,11 +13,12 @@ class fps(models.Model):
         max_digits=5, decimal_places=2, validators=[MinValueValidator(1)]
     )
     flavour = models.CharField(max_length=50)
-    size = models.PositiveSmallIntegerField(
+    weight = models.PositiveSmallIntegerField(
         validators=[MinValueValidator(1)],
         help_text="* in pounds",
     )
-    floor = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
+    floor_size = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
+    making_time = models.TimeField(default="01:30")
     product = models.ForeignKey("product", on_delete=models.CASCADE)
     # order = models.ForeignKey("order", on_delete=models.CASCADE, related_name="fsf")
 
@@ -39,7 +40,6 @@ class product(models.Model):
     food_type = models.CharField(max_length=3, choices=food_choice)
     active = models.BooleanField(verbose_name=("active"), default=False)
     created_at = models.DateField(auto_now=True)
-    ready = models.TimeField(default="00:30")
     shop = models.ForeignKey("shop", on_delete=models.PROTECT, related_name="products")
 
     def __str__(self):
@@ -126,10 +126,10 @@ class order(models.Model):
 
 class address(models.Model):
     tittle = models.CharField(max_length=250, null=True)
-    zip = models.PositiveIntegerField()
-    street = models.CharField(max_length=250)
-    city = models.CharField(max_length=250)
-    landmark = models.CharField(max_length=250)
+    zip = models.PositiveIntegerField(default="223344")
+    street = models.CharField(max_length=250, default="Sector")
+    city = models.CharField(max_length=250, default="HMH")
+    landmark = models.CharField(max_length=250, default="")
 
     customer = models.OneToOneField(
         customer, on_delete=models.CASCADE, related_name="addresss", primary_key=True

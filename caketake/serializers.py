@@ -49,6 +49,7 @@ class addressserial(serializers.ModelSerializer):
     class Meta:
         model = address
         fields = [
+            # "id",
             "tittle",
             "zip",
             "street",
@@ -104,8 +105,9 @@ class fpsserial(serializers.ModelSerializer):
             "flavour",
             "price",
             "with_gst",
-            "size",
-            "floor",
+            "weight",
+            "floor_size",
+            "making_time",
         ]
 
     with_gst = serializers.SerializerMethodField(method_name="cal_gst")

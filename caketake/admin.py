@@ -18,7 +18,7 @@ class shopadmin(admin.ModelAdmin):
     list_display = [
         "shop_name",
         "original_name",
-        "addresss",
+        # "addresss",
     ]
 
 
@@ -54,5 +54,5 @@ class addressadmin(admin.ModelAdmin):
         "zip",
         # "location",
         "customer",
-        "shop",
+        # "shop",
     ]
