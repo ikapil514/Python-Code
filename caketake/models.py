@@ -8,6 +8,20 @@ from django.conf import settings
 # from django.contrib.gis.db import models as gmodel
 
 
+class seller(models.Model):
+    email = models.EmailField(max_length=254)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user.first_name} {self.user.last_name}"
+
+    def first_name(self):
+        return self.user.first_name
+
+    def last_name(self):
+        return self.user.last_name
+
+
 class fps(models.Model):
     price = models.DecimalField(
         max_digits=5, decimal_places=2, validators=[MinValueValidator(1)]
@@ -55,6 +69,7 @@ class shop(models.Model):
     shop_name = models.CharField(max_length=250)
     original_name = models.CharField(max_length=250)
 
+    # seller = models.ForeignKey(seller, on_delete=models.CASCADE)
     def __str__(self):
         return self.shop_name
 

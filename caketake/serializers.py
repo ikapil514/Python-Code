@@ -167,3 +167,17 @@ class adminfpsserial(serializers.ModelSerializer):
 
     def cal_gst(self, fps: fps):
         return fps.price * Decimal(1.18)
+
+
+class sellerserial(serializers.ModelSerializer):
+    user_id = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = customer
+        fields = [
+            "id",
+            "user_id",
+            "first_name",
+            "last_name",
+            "email",
+        ]

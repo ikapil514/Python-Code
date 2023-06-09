@@ -8,6 +8,7 @@ from .models import (
     fps,
     order,
     product,
+    seller,
     shop,
 )
 from .serializers import (
@@ -19,6 +20,7 @@ from .serializers import (
     fpsserial,
     orderserial,
     productserial,
+    sellerserial,
     shopserial,
 )
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -91,9 +93,6 @@ class customerViewSet(ModelViewSet):
             return Response(serializer.data)
 
 
-# from django.utils import timezone
-
-
 class orderViewSet(ModelViewSet):
     queryset = order.objects.all()
     permission_classes = [IsAuthenticated]
@@ -103,12 +102,20 @@ class orderViewSet(ModelViewSet):
             return adminorderserial
         return orderserial
 
-    # def get_queryset(self,*args,**kwargs):
-    #     start_time = self.request.GET.get("start_time",None)
-    #     end_time = self.request.GET.get("end_time",None)
-    #     if start_time and end_time :
-    #         # convert timestamps to timezone objects
-    #         start_time_instance = timezone.datetime.fromtimestamp(start_time)
-    #         end_time_instance = timezone.datetime.fromtimestamp(end_time)
-    #         return self.queryset.filter(start_time=start_time_instance,end_time_instance=end_time_instance)
-    #     return self.queryset
+
+class sellerViewSet(ModelViewSet):
+    queryset = seller.objects.all()
+    serializer_class = sellerserial
+    permission_classes = [IsAdminUser]
+
+    @action(detail=False, methods=["GET", "PUT"], permission_classes=[IsAuthenticated])
+    def me(self, request):
+        (query_set, create) = seller.objects.get_or_create(user_id=request.user.id)
+        if request.method == "GET":
+            serializer = sellerserial(query_set)
+            return Response(serializer.data)
+        elif request.method == "PUT":
+            serializer = sellerserial(query_set, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data)
