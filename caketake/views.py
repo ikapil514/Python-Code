@@ -12,6 +12,9 @@ from .models import (
 )
 from .serializers import (
     addressserial,
+    adminfpsserial,
+    adminorderserial,
+    adminproductserial,
     customerserial,
     fpsserial,
     orderserial,
@@ -28,8 +31,12 @@ from rest_framework.viewsets import ModelViewSet
 
 class productViewSet(ModelViewSet):
     queryset = product.objects.all()
-    serializer_class = productserial
     permission_classes = [AdminOrReadonly]
+
+    def get_serializer_class(self):
+        if self.request.user.is_staff:
+            return adminproductserial
+        return productserial
 
 
 class shopViewSet(ModelViewSet):
@@ -58,8 +65,12 @@ class addressViewSet(ModelViewSet):
 
 class fpsViewSet(ModelViewSet):
     queryset = fps.objects.all()
-    serializer_class = fpsserial
     permission_classes = [AdminOrReadonly]
+
+    def get_serializer_class(self):
+        if self.request.user.is_staff:
+            return adminfpsserial
+        return fpsserial
 
 
 class customerViewSet(ModelViewSet):
@@ -85,8 +96,12 @@ class customerViewSet(ModelViewSet):
 
 class orderViewSet(ModelViewSet):
     queryset = order.objects.all()
-    serializer_class = orderserial
     permission_classes = [IsAuthenticated]
+
+    def get_serializer_class(self):
+        if self.request.user.is_staff:
+            return adminorderserial
+        return orderserial
 
     # def get_queryset(self,*args,**kwargs):
     #     start_time = self.request.GET.get("start_time",None)

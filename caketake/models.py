@@ -18,9 +18,11 @@ class fps(models.Model):
         help_text="* in pounds",
     )
     floor_size = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
-    making_time = models.TimeField(default="01:30")
+    making_time = models.DateTimeField()
     product = models.ForeignKey("product", on_delete=models.CASCADE)
-    # order = models.ForeignKey("order", on_delete=models.CASCADE, related_name="fsf")
+
+    def __str__(self):
+        return self.flavour
 
 
 class product(models.Model):
@@ -119,7 +121,8 @@ class order(models.Model):
         product, on_delete=models.PROTECT, related_name="orders"
     )
 
-    # fps = models.ForeignKey(fps, on_delete=models.PROTECT, related_name="orders")``
+    fps = models.ForeignKey(fps, on_delete=models.PROTECT, related_name="orders")
+
     class Meta:
         permissions = [("cancel_order", "Can cancel order")]
 

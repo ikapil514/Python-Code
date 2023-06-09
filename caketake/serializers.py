@@ -22,12 +22,29 @@ class productserial(serializers.ModelSerializer):
             "id",
             "shop_id",
             "image",
+            "more_images",
             "name",
             "description",
             "adult",
             "food_type",
             "active",
-            # "with_gst",
+        ]
+
+
+class adminproductserial(serializers.ModelSerializer):
+    class Meta:
+        model = product
+        fields = [
+            "id",
+            "shop",
+            "image",
+            "more_images",
+            "name",
+            "description",
+            "adult",
+            "food_type",
+            "active",
+            "created_at",
         ]
 
 
@@ -80,8 +97,9 @@ class orderserial(serializers.ModelSerializer):
         model = order
         fields = [
             "id",
-            "product_id",
+            "product",
             "customer",
+            "fps",
             "any_request",
             "delivery_type",
             "pay_type",
@@ -91,14 +109,52 @@ class orderserial(serializers.ModelSerializer):
         ]
 
 
-class fpsserial(serializers.ModelSerializer):
-    price = serializers.IntegerField(read_only=True)
+class adminorderserial(serializers.ModelSerializer):
+    any_request = serializers.CharField(read_only=True)
+    delivery_type = serializers.CharField(read_only=True)
+    pay_type = serializers.CharField(read_only=True)
 
+    class Meta:
+        model = order
+        fields = [
+            "id",
+            "product",
+            "customer",
+            "fps",
+            "any_request",
+            "delivery_type",
+            "pay_type",
+            "payment_status",
+            "order_status",
+        ]
+
+
+class fpsserial(serializers.ModelSerializer):
     class Meta:
         model = fps
         fields = [
             "id",
             "product_id",
+            "flavour",
+            "price",
+            "with_gst",
+            "weight",
+            "floor_size",
+            "making_time",
+        ]
+
+    with_gst = serializers.SerializerMethodField(method_name="cal_gst")
+
+    def cal_gst(self, fps: fps):
+        return fps.price * Decimal(1.18)
+
+
+class adminfpsserial(serializers.ModelSerializer):
+    class Meta:
+        model = fps
+        fields = [
+            "id",
+            "product",
             "flavour",
             "price",
             "with_gst",
