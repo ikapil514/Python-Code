@@ -69,7 +69,8 @@ class shop(models.Model):
     shop_name = models.CharField(max_length=250)
     original_name = models.CharField(max_length=250)
 
-    # seller = models.ForeignKey(seller, on_delete=models.CASCADE)
+    seller = models.ForeignKey(seller, on_delete=models.CASCADE)
+
     def __str__(self):
         return self.shop_name
 

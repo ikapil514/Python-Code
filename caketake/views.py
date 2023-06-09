@@ -108,7 +108,7 @@ class sellerViewSet(ModelViewSet):
     serializer_class = sellerserial
     permission_classes = [IsAdminUser]
 
-    @action(detail=False, methods=["GET", "PUT"], permission_classes=[IsAuthenticated])
+    @action(detail=False, methods=["GET", "PUT"], permission_classes=[IsAdminUser])
     def me(self, request):
         (query_set, create) = seller.objects.get_or_create(user_id=request.user.id)
         if request.method == "GET":

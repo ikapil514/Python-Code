@@ -55,7 +55,7 @@ class shopserial(serializers.ModelSerializer):
             "id",
             "shop_name",
             "original_name",
-            # "products",
+            "seller",
         ]
 
 
