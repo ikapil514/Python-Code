@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.db.models import F
 
+from core import serializers
+
 from .permissions import AdminOrReadonly
 from .models import (
     address,
@@ -95,7 +97,13 @@ class customerViewSet(ModelViewSet):
 
 class orderViewSet(ModelViewSet):
     queryset = order.objects.all()
+    # serializer_class = orderserial
     permission_classes = [IsAuthenticated]
+
+    # @action(detail=False, methods=["GET", "PUT"], permission_classes=[IsAuthenticated])
+    # def me(self, request):
+    # serializer = orderserial()
+    # return Response(request.user.id)
 
     def get_serializer_class(self):
         if self.request.user.is_staff:

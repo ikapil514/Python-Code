@@ -21,6 +21,9 @@ class seller(models.Model):
     def last_name(self):
         return self.user.last_name
 
+    def profile(self):
+        return self.user.profile
+
 
 class fps(models.Model):
     price = models.DecimalField(
@@ -93,6 +96,9 @@ class customer(models.Model):
 
     def last_name(self):
         return self.user.last_name
+
+    def profile(self):
+        return self.user.profile
 
 
 class order(models.Model):

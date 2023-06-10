@@ -13,6 +13,7 @@ class userserial(UserCreateSerializer):
             "password",
             "first_name",
             "last_name",
+            "profile",
         ]
 
     # def create(self, validated_data):
@@ -27,4 +28,5 @@ class customserial(UserSerializer):
             "phone",
             "first_name",
             "last_name",
+            "profile",
         ]

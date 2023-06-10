@@ -11,6 +11,8 @@ class User(AbstractUser):
     )
     # username = models.CharField(max_length=15, blank=True)
     OTP = models.CharField(max_length=6, blank=True)
+    choice = [("customer", "customer"), ("seller", "seller")]
+    profile = models.CharField(max_length=8, choices=choice, default="customer")
     username = models.CharField(max_length=50, blank=True)
     USERNAME_FIELD = "phone"
     REQUIRED_FIELDS = []

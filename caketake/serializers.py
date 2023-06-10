@@ -82,6 +82,7 @@ class customerserial(serializers.ModelSerializer):
         fields = [
             "id",
             "user_id",
+            "profile",
             "first_name",
             "last_name",
             "email",
@@ -177,6 +178,7 @@ class sellerserial(serializers.ModelSerializer):
         fields = [
             "id",
             "user_id",
+            "profile",
             "first_name",
             "last_name",
             "email",
