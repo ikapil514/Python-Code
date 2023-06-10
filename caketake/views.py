@@ -3,7 +3,7 @@ from django.db.models import F
 
 from core import serializers
 
-from .permissions import AdminOrReadonly
+from .permissions import AdminOrReadonly, FullAdminUser
 from .models import (
     address,
     customer,
@@ -114,7 +114,7 @@ class orderViewSet(ModelViewSet):
 class sellerViewSet(ModelViewSet):
     queryset = seller.objects.all()
     serializer_class = sellerserial
-    permission_classes = [IsAdminUser]
+    permission_classes = [FullAdminUser]
 
     @action(detail=False, methods=["GET", "PUT"], permission_classes=[IsAdminUser])
     def me(self, request):

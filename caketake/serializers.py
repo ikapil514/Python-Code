@@ -9,6 +9,7 @@ from caketake.models import (
     order,
     product,
     rating,
+    seller,
     shop,
 )
 
@@ -174,7 +175,7 @@ class sellerserial(serializers.ModelSerializer):
     user_id = serializers.IntegerField(read_only=True)
 
     class Meta:
-        model = customer
+        model = seller
         fields = [
             "id",
             "user_id",
