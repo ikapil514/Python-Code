@@ -9,7 +9,7 @@ from django.conf import settings
 
 
 class seller(models.Model):
-    email = models.EmailField(max_length=254)
+    email = models.EmailField()
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -27,7 +27,7 @@ class seller(models.Model):
 
 class fps(models.Model):
     price = models.DecimalField(
-        max_digits=5, decimal_places=2, validators=[MinValueValidator(1)]
+        max_digits=6, decimal_places=2, validators=[MinValueValidator(1)]
     )
     flavour = models.CharField(max_length=50)
     weight = models.PositiveSmallIntegerField(
@@ -36,7 +36,7 @@ class fps(models.Model):
     )
     floor_size = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
     making_time = models.DateTimeField()
-    product = models.ForeignKey("product", on_delete=models.CASCADE)
+    product = models.ForeignKey("product", on_delete=models.CASCADE, related_name="fps")
 
     def __str__(self):
         return self.flavour
@@ -45,8 +45,10 @@ class fps(models.Model):
 class product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
-    image = models.ImageField(upload_to="cake/image.img", default="")
-    more_images = models.ImageField(upload_to="morecake/image.img", default="")
+    image = models.ImageField(upload_to="cake/image.img", default="", null=True)
+    more_images = models.ImageField(
+        upload_to="morecake/image.img", default="", null=True
+    )
     adult = models.BooleanField(verbose_name=("Adult"), default=False)
     food_veg = "V"
     food_nonveg = "NV"
@@ -82,7 +84,7 @@ class shop(models.Model):
 
 
 class customer(models.Model):
-    email = models.EmailField(unique=True)
+    email = models.EmailField()
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     # address class = addresss

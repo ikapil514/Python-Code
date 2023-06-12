@@ -14,8 +14,28 @@ from caketake.models import (
 )
 
 
+class fpsserial(serializers.ModelSerializer):
+    class Meta:
+        model = fps
+        fields = [
+            "id",
+            "product_id",
+            "flavour",
+            "price",
+            "with_gst",
+            "weight",
+            "floor_size",
+            "making_time",
+        ]
+
+    with_gst = serializers.SerializerMethodField(method_name="cal_gst")
+
+    def cal_gst(self, fps: fps):
+        return fps.price * Decimal(1.18)
+
+
 class productserial(serializers.ModelSerializer):
-    image = serializers.ImageField(read_only=True)
+    fps = fpsserial(many=True)
 
     class Meta:
         model = product
@@ -29,15 +49,18 @@ class productserial(serializers.ModelSerializer):
             "adult",
             "food_type",
             "active",
+            "fps",
         ]
 
 
 class adminproductserial(serializers.ModelSerializer):
+    fps = fpsserial(many=True)
+
     class Meta:
         model = product
         fields = [
             "id",
-            "shop",
+            # "shop",
             "image",
             "more_images",
             "name",
@@ -46,7 +69,12 @@ class adminproductserial(serializers.ModelSerializer):
             "food_type",
             "active",
             "created_at",
+            "fps",
         ]
+
+    def create(self, validated_data):
+        shop_id = self.context["shop_id"]
+        return product.objects.create(shop_id=shop_id, **validated_data)
 
 
 class shopserial(serializers.ModelSerializer):
@@ -107,7 +135,6 @@ class orderserial(serializers.ModelSerializer):
             "pay_type",
             "payment_status",
             "order_status",
-            # "with_gst",
         ]
 
 
@@ -120,55 +147,15 @@ class adminorderserial(serializers.ModelSerializer):
         model = order
         fields = [
             "id",
-            "product",
-            "customer",
-            "fps",
+            "product_id",
+            "customer_id",
+            "fps_id",
             "any_request",
             "delivery_type",
             "pay_type",
             "payment_status",
             "order_status",
         ]
-
-
-class fpsserial(serializers.ModelSerializer):
-    class Meta:
-        model = fps
-        fields = [
-            "id",
-            "product_id",
-            "flavour",
-            "price",
-            "with_gst",
-            "weight",
-            "floor_size",
-            "making_time",
-        ]
-
-    with_gst = serializers.SerializerMethodField(method_name="cal_gst")
-
-    def cal_gst(self, fps: fps):
-        return fps.price * Decimal(1.18)
-
-
-class adminfpsserial(serializers.ModelSerializer):
-    class Meta:
-        model = fps
-        fields = [
-            "id",
-            "product",
-            "flavour",
-            "price",
-            "with_gst",
-            "weight",
-            "floor_size",
-            "making_time",
-        ]
-
-    with_gst = serializers.SerializerMethodField(method_name="cal_gst")
-
-    def cal_gst(self, fps: fps):
-        return fps.price * Decimal(1.18)
 
 
 class sellerserial(serializers.ModelSerializer):

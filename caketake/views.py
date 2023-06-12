@@ -3,7 +3,7 @@ from django.db.models import F
 
 from core import serializers
 
-from .permissions import AdminOrReadonly, FullAdminUser
+from .permissions import AdminOrReadonly, Authonly, FullAdminUser
 from .models import (
     address,
     customer,
@@ -15,7 +15,6 @@ from .models import (
 )
 from .serializers import (
     addressserial,
-    adminfpsserial,
     adminorderserial,
     adminproductserial,
     customerserial,
@@ -34,13 +33,18 @@ from rest_framework.viewsets import ModelViewSet
 
 
 class productViewSet(ModelViewSet):
-    queryset = product.objects.all()
     permission_classes = [AdminOrReadonly]
+
+    def get_queryset(self):
+        return product.objects.filter(shop_id=self.kwargs["shop_pk"])
 
     def get_serializer_class(self):
         if self.request.user.is_staff:
             return adminproductserial
         return productserial
+
+    def get_serializer_context(self):
+        return {"product_id": self.kwargs["shop_pk"]}
 
 
 class shopViewSet(ModelViewSet):
@@ -69,20 +73,16 @@ class addressViewSet(ModelViewSet):
 
 class fpsViewSet(ModelViewSet):
     queryset = fps.objects.all()
-    permission_classes = [AdminOrReadonly]
-
-    def get_serializer_class(self):
-        if self.request.user.is_staff:
-            return adminfpsserial
-        return fpsserial
+    serializer_class = fpsserial
+    permission_classes = [IsAdminUser]
 
 
 class customerViewSet(ModelViewSet):
     queryset = customer.objects.all()
     serializer_class = customerserial
-    permission_classes = [IsAdminUser]
+    permission_classes = [FullAdminUser]
 
-    @action(detail=False, methods=["GET", "PUT"], permission_classes=[IsAuthenticated])
+    @action(detail=False, methods=["GET", "PUT"], permission_classes=[Authonly])
     def me(self, request):
         (query_set, create) = customer.objects.get_or_create(user_id=request.user.id)
         if request.method == "GET":
