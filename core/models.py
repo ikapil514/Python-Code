@@ -14,6 +14,7 @@ class User(AbstractUser):
     choice = [("customer", "customer"), ("seller", "seller")]
     profile = models.CharField(max_length=8, choices=choice, default="customer")
     username = models.CharField(max_length=50, blank=True)
+    # username = None
     USERNAME_FIELD = "phone"
     REQUIRED_FIELDS = []
     object = usermanager()

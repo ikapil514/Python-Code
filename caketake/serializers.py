@@ -19,7 +19,7 @@ class fpsserial(serializers.ModelSerializer):
         model = fps
         fields = [
             "id",
-            "product_id",
+            # "product_id",
             "flavour",
             "price",
             "with_gst",
@@ -54,13 +54,10 @@ class productserial(serializers.ModelSerializer):
 
 
 class adminproductserial(serializers.ModelSerializer):
-    fps = fpsserial(many=True)
-
     class Meta:
         model = product
         fields = [
             "id",
-            # "shop",
             "image",
             "more_images",
             "name",
@@ -69,12 +66,17 @@ class adminproductserial(serializers.ModelSerializer):
             "food_type",
             "active",
             "created_at",
-            "fps",
+            # "fps",
         ]
 
-    def create(self, validated_data):
-        shop_id = self.context["shop_id"]
-        return product.objects.create(shop_id=shop_id, **validated_data)
+    # def create(self, validated_data):
+    #     shop_id = self.context["shop_id"]
+    #     return product.objects.create(shop_id=shop_id, **validated_data)
+
+    # def update(self, instance, validated_data):
+    #     instance.fps = validated_data.get("fps")
+    #     instance.save()
+    #     return instance
 
 
 class shopserial(serializers.ModelSerializer):
@@ -128,13 +130,14 @@ class orderserial(serializers.ModelSerializer):
         fields = [
             "id",
             "product",
-            "customer",
+            "customer_id",
             "fps",
             "any_request",
             "delivery_type",
             "pay_type",
             "payment_status",
             "order_status",
+            "placed_at",
         ]
 
 
@@ -155,17 +158,20 @@ class adminorderserial(serializers.ModelSerializer):
             "pay_type",
             "payment_status",
             "order_status",
+            "placed_at",
         ]
 
 
 class sellerserial(serializers.ModelSerializer):
     user_id = serializers.IntegerField(read_only=True)
+    # shops = serializers.CharField(read_only=True)
 
     class Meta:
         model = seller
         fields = [
             "id",
             "user_id",
+            # "shops",
             "profile",
             "first_name",
             "last_name",

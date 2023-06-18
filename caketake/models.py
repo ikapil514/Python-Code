@@ -74,7 +74,9 @@ class shop(models.Model):
     shop_name = models.CharField(max_length=250)
     original_name = models.CharField(max_length=250)
 
-    seller = models.ForeignKey(seller, on_delete=models.CASCADE)
+    seller = models.OneToOneField(
+        seller, on_delete=models.CASCADE, related_name="shops"
+    )
 
     def __str__(self):
         return self.shop_name
@@ -104,7 +106,7 @@ class customer(models.Model):
 
 
 class order(models.Model):
-    placed_at = models.DateField(auto_now_add=True)
+    placed_at = models.DateTimeField(auto_now_add=True)
     any_request = models.TextField(null=True, blank=True)
     food_choice = [("Veg", "Veg"), ("Non-Veg", "Non-Veg")]
     food_type = models.CharField(max_length=8, choices=food_choice)

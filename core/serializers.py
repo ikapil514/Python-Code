@@ -16,9 +16,9 @@ class userserial(UserCreateSerializer):
             "profile",
         ]
 
-    # def create(self, data):
-    #     data["username"] == data["phone"]         # lesson 16,17 part2
-    #     return User.object.create_user(data)
+    # lesson 16,17 part2
+    def create(self, validated_data):
+        return super().create(validated_data)
 
 
 class customserial(UserSerializer):
