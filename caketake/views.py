@@ -43,10 +43,7 @@ class productViewSet(ModelViewSet):
     def get_queryset(self):
         return product.objects.filter(shop_id=self.kwargs["shop_pk"])
 
-    def get_serializer_class(self):
-        if self.request.user.is_staff:
-            return adminproductserial
-        return productserial
+    serializer_class = adminproductserial
 
     def get_serializer_context(self):
         return {"product_id": self.kwargs["shop_pk"]}
@@ -64,7 +61,7 @@ class ShopList(APIView):
         serializer.save()
         return Response(serializer.data)
 
-    permission_classes = [AdminOrReadonly]
+    permission_classes = [IsAdminUser]
 
 
 class productList(APIView):
@@ -80,6 +77,8 @@ class productList(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+
+    permission_classes = [IsAdminUser]
 
 
 class fpsViewSet(ModelViewSet):

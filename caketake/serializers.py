@@ -34,25 +34,6 @@ class fpsserial(serializers.ModelSerializer):
         return fps.price * Decimal(1.18)
 
 
-class productserial(serializers.ModelSerializer):
-    fps = fpsserial(many=True)
-
-    class Meta:
-        model = product
-        fields = [
-            "id",
-            "shop_id",
-            "image",
-            "more_images",
-            "name",
-            "description",
-            "adult",
-            "food_type",
-            "active",
-            "fps",
-        ]
-
-
 class adminproductserial(serializers.ModelSerializer):
     class Meta:
         model = product
