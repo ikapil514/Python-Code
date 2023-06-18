@@ -73,7 +73,7 @@ class product(models.Model):
 class shop(models.Model):
     shop_name = models.CharField(max_length=250)
     original_name = models.CharField(max_length=250)
-
+    address = models.CharField(max_length=250)
     seller = models.OneToOneField(
         seller, on_delete=models.CASCADE, related_name="shops"
     )

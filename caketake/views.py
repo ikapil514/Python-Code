@@ -18,7 +18,6 @@ from .serializers import (
     customerserial,
     fpsserial,
     orderserial,
-    productserial,
     sellerserial,
     shopserial,
 )
