@@ -50,9 +50,9 @@ class adminproductserial(serializers.ModelSerializer):
             # "fps",
         ]
 
-    # def create(self, validated_data):
-    #     shop_id = self.context["shop_id"]
-    #     return product.objects.create(shop_id=shop_id, **validated_data)
+    def create(self, validated_data):
+        shop_id = self.context["product_id"]
+        return product.objects.create(shop_id=shop_id, **validated_data)
 
     # def update(self, instance, validated_data):
     #     instance.fps = validated_data.get("fps")
@@ -67,7 +67,7 @@ class shopserial(serializers.ModelSerializer):
             "id",
             "shop_name",
             "original_name",
-            "seller",
+            "seller_id",
         ]
 
 

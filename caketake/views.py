@@ -26,6 +26,7 @@ from rest_framework.decorators import action, api_view, APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, RetrieveModelMixin
+from rest_framework.generics import RetrieveUpdateAPIView
 
 # Create your views here.
 
@@ -37,7 +38,25 @@ class cshopViewSet(ModelViewSet):
 
 
 class productViewSet(ModelViewSet):
-    permission_classes = [AdminOrReadonly]
+    permission_classes = [SuperOrReadonly]
+
+    def get_queryset(self):
+        return product.objects.filter(shop_id=self.kwargs["shop_pk"])
+
+    serializer_class = adminproductserial
+
+
+class sellershopViewSet(ModelViewSet):
+    serializer_class = shopserial
+    permission_classes = [IsAdminUser]
+
+    def get_queryset(self):
+        sellerid = seller.objects.get(id=self.request.user.seller.id)
+        return shop.objects.filter(seller_id=sellerid)
+
+
+class sellerproductViewSet(ModelViewSet):
+    permission_classes = [IsAdminUser]
 
     def get_queryset(self):
         return product.objects.filter(shop_id=self.kwargs["shop_pk"])
@@ -48,36 +67,42 @@ class productViewSet(ModelViewSet):
         return {"product_id": self.kwargs["shop_pk"]}
 
 
-class ShopList(APIView):
-    def get(self, request):
-        shp = shop.objects.get(seller_id=request.user.seller.id)
-        serializer = shopserial(shp)
-        return Response(serializer.data)
+# class ShopList(APIView):
+#     def get(self, request):
+#         shp = shop.objects.get(seller_id=request.user.seller.id)
+#         serializer = shopserial(shp)
+#         return Response(serializer.data)
 
-    def post(self, request):
-        serializer = shopserial(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+#     def post(self, request):
+#         serializer = shopserial(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data)
 
-    permission_classes = [IsAdminUser]
+#     def put(self, request):
+#         serializer = shopserial(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data)
+
+#     permission_classes = [IsAdminUser]
 
 
-class productList(APIView):
-    def get(self, request):
-        shp = shop.objects.only("id").get(seller_id=request.user.seller.id).id
+# class productList(APIView):
+#     def get(self, request):
+#         shp = shop.objects.only("id").get(seller_id=request.user.seller.id).id
 
-        pro = product.objects.filter(shop=shp)
-        serializer = adminproductserial(pro, many=True)
-        return Response(serializer.data)
+#         pro = product.objects.filter(shop=shp)
+#         serializer = adminproductserial(pro, many=True)
+#         return Response(serializer.data)
 
-    def post(self, request):
-        serializer = adminproductserial(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+#     def post(self, request):
+#         serializer = adminproductserial(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data)
 
-    permission_classes = [IsAdminUser]
+#     permission_classes = [IsAdminUser]
 
 
 class fpsViewSet(ModelViewSet):
