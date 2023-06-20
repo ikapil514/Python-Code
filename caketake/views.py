@@ -76,7 +76,12 @@ class fpsViewSet(ModelViewSet):
     permission_classes = [IsAdminUser]
 
     # def get_queryset(self):
-    #     return fps.objects.filter(product_id=self.kwargs["product_pk"])
+    #     sellerid = seller.objects.get(id = self.request.user.seller.id)
+    #     shp = shop.object.get()
+    #     return
+
+    def get_serializer_context(self):
+        return {"seller_id": self.request.user.seller.id}
 
 
 class customerViewSet(ModelViewSet):

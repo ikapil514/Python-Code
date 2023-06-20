@@ -19,7 +19,7 @@ class fpsserial(serializers.ModelSerializer):
         model = fps
         fields = [
             "id",
-            # "product_id",
+            "product_id",
             "flavour",
             "price",
             "with_gst",
