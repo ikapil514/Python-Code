@@ -70,6 +70,10 @@ class shopserial(serializers.ModelSerializer):
             "seller_id",
         ]
 
+    def create(self, validated_data):
+        seller_id = self.context["seller_id"]
+        return shop.objects.create(seller_id=seller_id, **validated_data)
+
 
 class addressserial(serializers.ModelSerializer):
     class Meta:
