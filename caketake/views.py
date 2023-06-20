@@ -1,7 +1,5 @@
 from django.shortcuts import render
-from django.db.models import F
-from core import serializers
-from .permissions import AdminOrReadonly, Authonly, FullAdminUser, SuperOrReadonly
+from .permissions import AuthExceptAdmin, SuperAdminUser, SuperOrReadonly
 from .models import (
     address,
     customer,
@@ -22,11 +20,10 @@ from .serializers import (
     shopserial,
 )
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from rest_framework.decorators import action, api_view, APIView
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, RetrieveModelMixin
-from rest_framework.generics import RetrieveUpdateAPIView
 
 # Create your views here.
 
@@ -87,9 +84,9 @@ class fpsViewSet(ModelViewSet):
 class customerViewSet(ModelViewSet):
     queryset = customer.objects.all()
     serializer_class = customerserial
-    permission_classes = [FullAdminUser]
+    permission_classes = [SuperAdminUser]
 
-    @action(detail=False, methods=["GET", "PUT"], permission_classes=[Authonly])
+    @action(detail=False, methods=["GET", "PUT"], permission_classes=[AuthExceptAdmin])
     def me(self, request):
         (query_set, create) = customer.objects.get_or_create(user_id=request.user.id)
         if request.method == "GET":
@@ -126,7 +123,7 @@ class orderViewSet(
 class sellerViewSet(ModelViewSet):
     queryset = seller.objects.all()
     serializer_class = sellerserial
-    permission_classes = [FullAdminUser]
+    permission_classes = [SuperAdminUser]
 
     @action(detail=False, methods=["GET", "PUT"], permission_classes=[IsAdminUser])
     def me(self, request):

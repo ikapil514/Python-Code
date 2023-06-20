@@ -9,14 +9,14 @@ class AdminOrReadonly(permissions.BasePermission):
         return bool(request.user and request.user.is_staff)
 
 
-class FullAdminUser(permissions.BasePermission):
+class SuperAdminUser(permissions.BasePermission):
     def has_permission(self, request, view):
         return bool(
             request.user and request.user.is_staff and request.user.is_superuser
         )
 
 
-class Authonly(permissions.BasePermission):
+class AuthExceptAdmin(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.user and request.user.is_staff:
             return False
