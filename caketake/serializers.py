@@ -1,4 +1,5 @@
 from decimal import Decimal
+from genericpath import exists
 from django.db import transaction
 from rest_framework import serializers
 
@@ -18,8 +19,8 @@ class fpsserial(serializers.ModelSerializer):
     class Meta:
         model = fps
         fields = [
+            "product",
             "id",
-            "product_id",
             "flavour",
             "price",
             "with_gst",
@@ -35,6 +36,8 @@ class fpsserial(serializers.ModelSerializer):
 
 
 class adminproductserial(serializers.ModelSerializer):
+    fps = fpsserial(many=True, read_only=True)
+
     class Meta:
         model = product
         fields = [
@@ -47,7 +50,7 @@ class adminproductserial(serializers.ModelSerializer):
             "food_type",
             "active",
             "created_at",
-            # "fps",
+            "fps",
         ]
 
     def create(self, validated_data):
@@ -55,9 +58,9 @@ class adminproductserial(serializers.ModelSerializer):
         return product.objects.create(shop_id=shop_id, **validated_data)
 
     # def update(self, instance, validated_data):
-    #     instance.fps = validated_data.get("fps")
-    #     instance.save()
-    #     return instance
+    #     product.fps = validated_data.get("fps")
+    #     product.save()
+    #     return product
 
 
 class shopserial(serializers.ModelSerializer):
@@ -73,6 +76,11 @@ class shopserial(serializers.ModelSerializer):
     def create(self, validated_data):
         seller_id = self.context["seller_id"]
         return shop.objects.create(seller_id=seller_id, **validated_data)
+
+    # def validate(self, data):
+    #     if data["shop_id"] is exists:
+    #         return serializers.ValidationError("Shop Already Exists")
+    #     return data
 
 
 class addressserial(serializers.ModelSerializer):
@@ -114,8 +122,8 @@ class orderserial(serializers.ModelSerializer):
         model = order
         fields = [
             "id",
-            "product",
             "customer_id",
+            "product",
             "fps",
             "any_request",
             "delivery_type",
@@ -124,6 +132,10 @@ class orderserial(serializers.ModelSerializer):
             "order_status",
             "placed_at",
         ]
+
+    def create(self, validated_data):
+        customer_id = self.context["customer_id"]
+        return order.objects.create(customer_id=customer_id, **validated_data)
 
 
 class adminorderserial(serializers.ModelSerializer):
@@ -156,7 +168,6 @@ class sellerserial(serializers.ModelSerializer):
         fields = [
             "id",
             "user_id",
-            # "shops",
             "profile",
             "first_name",
             "last_name",

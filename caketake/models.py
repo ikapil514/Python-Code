@@ -146,7 +146,6 @@ class order(models.Model):
     product = models.ForeignKey(
         product, on_delete=models.PROTECT, related_name="orders"
     )
-
     fps = models.ForeignKey(fps, on_delete=models.PROTECT, related_name="orders")
 
     class Meta:

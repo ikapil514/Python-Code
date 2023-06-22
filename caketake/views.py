@@ -23,7 +23,12 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
-from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, RetrieveModelMixin
+from rest_framework.mixins import (
+    RetrieveModelMixin,
+    UpdateModelMixin,
+    CreateModelMixin,
+    DestroyModelMixin,
+)
 
 # Create your views here.
 
@@ -43,7 +48,9 @@ class productViewSet(ModelViewSet):
     serializer_class = adminproductserial
 
 
-class sellershopViewSet(ModelViewSet):
+class sellershopViewSet(
+    CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet
+):
     serializer_class = shopserial
     permission_classes = [IsAdminUser]
 
@@ -67,18 +74,10 @@ class sellerproductViewSet(ModelViewSet):
         return {"product_id": self.kwargs["shop_pk"]}
 
 
-class fpsViewSet(ModelViewSet):
+class fpsViewSet(CreateModelMixin, UpdateModelMixin, DestroyModelMixin, GenericViewSet):
     queryset = fps.objects.all()
     serializer_class = fpsserial
     permission_classes = [IsAdminUser]
-
-    # def get_queryset(self):
-    #     sellerid = seller.objects.get(id = self.request.user.seller.id)
-    #     shp = shop.object.get()
-    #     return
-
-    def get_serializer_context(self):
-        return {"seller_id": self.request.user.seller.id}
 
 
 class customerViewSet(ModelViewSet):
@@ -100,24 +99,27 @@ class customerViewSet(ModelViewSet):
 
 
 class orderViewSet(
-    CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet
+    CreateModelMixin,
+    RetrieveModelMixin,
+    UpdateModelMixin,
+    GenericViewSet,
 ):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AuthExceptAdmin]
 
     def get_queryset(self):
-        if self.request.user.is_staff:
-            return order.objects.all()
         cust_id = customer.objects.only("id").get(user_id=self.request.user)
         return order.objects.filter(customer_id=cust_id)
 
     def get_serializer_class(self):
-        if self.request.user.is_staff:
-            return adminorderserial
         return orderserial
 
-    # @action(detail=True, permission_classes=[IsAdminUser])
-    # def cancel(self, request, pk):
-    #     return Response("ok")
+    def get_serializer_context(self):
+        return {"customer_id": self.request.user.customer.id}
+
+
+class sellerorderViewSet(ModelViewSet):
+    queryset = order.objects.all()
+    serializer_class = adminorderserial
 
 
 class sellerViewSet(ModelViewSet):
