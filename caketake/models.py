@@ -83,6 +83,7 @@ class shop(models.Model):
 
     # address class = addresss
     # product class = products
+    # order class = orders
 
 
 class customer(models.Model):
@@ -147,6 +148,8 @@ class order(models.Model):
         product, on_delete=models.PROTECT, related_name="orders"
     )
     fps = models.ForeignKey(fps, on_delete=models.PROTECT, related_name="orders")
+
+    shop = models.ForeignKey(shop, on_delete=models.PROTECT, related_name="orders")
 
     class Meta:
         permissions = [("cancel_order", "Can cancel order")]

@@ -118,8 +118,13 @@ class orderViewSet(
 
 
 class sellerorderViewSet(ModelViewSet):
-    queryset = order.objects.all()
     serializer_class = adminorderserial
+
+    def get_queryset(self):
+        shp = shop.objects.only("id").get(seller_id=self.request.user.seller.id)
+        return order.objects.filter(shop_id=shp)
+
+    permission_classes = [IsAdminUser]
 
 
 class sellerViewSet(ModelViewSet):

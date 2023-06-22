@@ -71,6 +71,7 @@ class shopserial(serializers.ModelSerializer):
             "shop_name",
             "original_name",
             "seller_id",
+            "orders",
         ]
 
     def create(self, validated_data):
@@ -123,6 +124,7 @@ class orderserial(serializers.ModelSerializer):
         fields = [
             "id",
             "customer_id",
+            "shop",
             "product",
             "fps",
             "any_request",
@@ -150,6 +152,7 @@ class adminorderserial(serializers.ModelSerializer):
             "product_id",
             "customer_id",
             "fps_id",
+            "shop_id",
             "any_request",
             "delivery_type",
             "pay_type",
